@@ -8,6 +8,11 @@ a {
   color: black;
 }
 
+/* * is universal selector(for all elements in project */
+* {
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
 }
