@@ -4,7 +4,7 @@ import Header from './components/header/header.component'
 import SignInAndSingUpPage from './pages/sign-in-up/sign-in-up.component.jsx'
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 import './App.css';
 
@@ -21,22 +21,45 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    //cause auth.onAuthStateChanged() connection is always open. Because it's an open subscription, we need to close that subscription when component unmounts, to prevent memory leeks    
-   this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user })
-      console.log(user);
+
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      // if user sign in, check if user is sign in(userAuth !== null), gets userRef from createUserProfileDocument from userAuth object been passed -
+      // if there is a document there(userRef), it will be passed back to userRef var. If there isn't an user document, it will create a document in 
+      // createUserProfileDocument method in line 26, userRef.set() and that why it will still pass back document(userRef) to const userRef
+      // than it will listen(a.k.a.subscribe)(.onSnapshot()) to userRef for any changes to that data, but it will all so get back the first state(snapShot) of that data. 
+      // So than, using that state, it will setState of app.js using that state(snapShot) - snapShot.id and snapShot.data()
+      // if user logs out(else statement) it will set currentUser: userAuth (userAuth !== null)
+
+      // onAuthStateChanged returns authenticated user, which we pass to createUserProfileDocument, which returns documentReference(userRef)  
+      // firebase database. On that userRef we call an onSnapshot() method which returns documentSnapshot from firebase
+      // than we setState tp currentUser with data from snapShot. Need to use .data() method on snapShot - thats the way to get data from snapshots
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          })
+        })
+      } else {
+        // if userAuth is null, setState - currentUser is userAuth (userAuth === null)
+        this.setState({ currentUser: userAuth })
+      }
     })
   }
 
+  //cause auth.onAuthStateChanged() connection is always open. Because it's an open subscription, we need to close that subscription when component unmounts, to prevent memory leeks 
   // whene componentWillUnmount it will close auth subscription.
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
 
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser } />
+        <Header currentUser={this.state.currentUser} />
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route exact path='/shop' component={ShopPage} />
