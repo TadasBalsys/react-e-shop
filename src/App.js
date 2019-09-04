@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { setCurrentUser } from './redux/user/user.actions';
+
 import Header from './components/header/header.component'
 import SignInAndSingUpPage from './pages/sign-in-up/sign-in-up.component.jsx'
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 import './App.css';
 
 // Switch component - prevents from rendering all Route components. When Route's is in Switch component, React finds Route component with the path which are needed, renders that Route component and stops rendering other Route components.(A <Switch> will iterate over all of its children <Route> elements and only render the first one that matches the current location. This helps when multiple route’s paths match the same pathname, when animating transitions between routes, and in identifying when no routes match the current location (so that you can render a “404” component).)
 // Any component that gets render by Route component, gets three props - history, location, match
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      currentUser: null
-    }
-  }
-
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if user sign in, check if user is sign in(userAuth !== null), gets userRef from createUserProfileDocument from userAuth object been passed -
       // if there is a document there(userRef), it will be passed back to userRef var. If there isn't an user document, it will create a document in 
@@ -35,7 +32,7 @@ class App extends Component {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
         userRef.onSnapshot(snapShot => {
-          this.setState({
+          setCurrentUser({
             currentUser: {
               id: snapShot.id,
               ...snapShot.data()
@@ -44,7 +41,7 @@ class App extends Component {
         })
       } else {
         // if userAuth is null, setState - currentUser is userAuth (userAuth === null)
-        this.setState({ currentUser: userAuth })
+        setCurrentUser(userAuth)
       }
     })
   }
@@ -55,10 +52,11 @@ class App extends Component {
     this.unsubscribeFromAuth();
   }
 
+
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
           <Route exact path='/shop' component={ShopPage} />
@@ -69,4 +67,8 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+})
+
+export default connect(null, mapDispatchToProps)(App);
