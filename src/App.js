@@ -50,7 +50,7 @@ class App extends Component {
   }
 
   //cause auth.onAuthStateChanged() connection is always open. Because it's an open subscription, we need to close that subscription when component unmounts, to prevent memory leeks 
-  // whene componentWillUnmount it will close auth subscription.
+  // when componentWillUnmount it will close auth subscription.
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
