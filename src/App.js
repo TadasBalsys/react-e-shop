@@ -21,7 +21,6 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if user sign in, check if user is sign in(userAuth !== null), gets userRef from createUserProfileDocument from userAuth object been passed -
       // if there is a document there(userRef), it will be passed back to userRef var. If there isn't an user document, it will create a document in 
