@@ -9,8 +9,6 @@ class ShopPage extends Component {
         this.state = {
             collections: SHOP_DATA
         }
-        this.state.collections.map(collection => console.log(collection))
-        // this.state.collections.map(collection => collection.items.map(item => console.log(item)))
    }   
 
 
