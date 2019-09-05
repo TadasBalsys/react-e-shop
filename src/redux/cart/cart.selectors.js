@@ -1,4 +1,4 @@
-import { createSelector} from 'reselect';
+import { createSelector } from 'reselect';
 
 // selectCart - Input selector are selector that only returns a piece of the state.
 const selectCart = state => state.cart;
@@ -17,6 +17,11 @@ export const selectCartItemsCount = createSelector(
         0
     )
 );
+
+export const selectCartHidden = createSelector(
+    [selectCart],
+    cart => cart.hidden
+)
 
 // The flow: 
 // When selectCartItemsCount() is called, first it checks for [selectedCartItems] - it invokes selectCartItems() where first thing this method does is
