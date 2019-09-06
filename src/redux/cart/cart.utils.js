@@ -7,7 +7,6 @@
  * 
  */
 export const addItemToCart = (cartItems, cartItemToAdd) => {
-    // better to use uniq id(item.id), but now I use mock data from shop.data.js where items doesn't have uniq id.
     const existingCartItem = cartItems.find(item => item.id === cartItemToAdd.id)
     if (existingCartItem) {
         return cartItems.map(cartItem =>
@@ -17,4 +16,4 @@ export const addItemToCart = (cartItems, cartItemToAdd) => {
         )
     }
     return [...cartItems, { ...cartItemToAdd, quantity: 1 }]
-} 
+}

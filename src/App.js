@@ -7,10 +7,11 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
 
-import Header from './components/header/header.component'
-import SignInAndSingUpPage from './pages/sign-in-up/sign-in-up.component.jsx'
+import Header from './components/header/header.component';
+import SignInAndSingUpPage from './pages/sign-in-up/sign-in-up.component.jsx';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
+import CheckoutPage from './pages/checkout/checkout.component';
 
 import './App.css';
 
@@ -70,7 +71,8 @@ class App extends Component {
         <Header />
         <Switch>
           <Route exact path='/' component={HomePage} />
-          <Route exact path='/shop' component={ShopPage} />
+          <Route path='/shop' component={ShopPage} />
+          <Route exact path='/checkout' component={CheckoutPage} />
           <Route exact path='/sign' render={() =>
             this.props.currentUser ? (
               <Redirect to='/' />
