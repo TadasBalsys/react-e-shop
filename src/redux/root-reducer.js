@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from '../redux/user/user.reducer';
 import cartReducer from '../redux/cart/cart.reducers';
 import directoryReducer from '../redux/directory/directory.reducers';
+import shopReducer from '../redux/shop/shop.reducers';
 
 // whitelist - in this case the only reducer which redux-persist will persist is cartReducer
 const persistConfig = {
@@ -17,7 +18,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
     user: userReducer,
     cart: cartReducer,
-    directory: directoryReducer
+    directory: directoryReducer,
+    shop: shopReducer
 });
  
 export const persistedRootReducer = persistReducer(persistConfig, rootReducer)
