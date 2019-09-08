@@ -7,7 +7,7 @@ import { addItem } from '../../redux/cart/cart.actions';
  
 import CollectionItem from '../../components/collection-item/collection-item.component';
 
-import './category.styles.scss';
+import './collection.styles.scss';
 
 const mapStateToProps = createStructuredSelector({
     collections: selectShopCollections
@@ -18,10 +18,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-const CategoryPage = ({ match, collections, addItem }) => {
-    const selectedCollection = collections.find(collection => collection.routeName === match.params.categoryId)
+const CollectionPage = ({ match, collections, addItem }) => {
+    const selectedCollection = collections.find(collection => collection.routeName === match.params.collectionId)
     return (
-        <div className='category'>
+        <div className='collection-page'> 
             {selectedCollection.items.map((item, i) => (
                 <CollectionItem key={i} item={item} addItem={addItem}/>
             ))}
@@ -29,4 +29,4 @@ const CategoryPage = ({ match, collections, addItem }) => {
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoryPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionPage);
