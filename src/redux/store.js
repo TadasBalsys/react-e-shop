@@ -9,4 +9,4 @@ const middlewares = [logger];
 const store = createStore(persistedRootReducer, applyMiddleware(...middlewares));
 const persistor = persistStore(store);
 
-export { store, persistor  };
+export { store, persistor };
