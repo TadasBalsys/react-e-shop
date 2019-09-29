@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
 
 import { selectCollectionByName } from '../../redux/shop/shop.selectors';
 import { addItem } from '../../redux/cart/cart.actions';
@@ -9,8 +8,8 @@ import CollectionItem from '../../components/collection-item/collection-item.com
 
 import './collection.styles.scss';
 
-const mapStateToProps = (state, ownProps) => createStructuredSelector({
-    collection: selectCollectionByName(ownProps.match.params.collectionId)
+const mapStateToProps = (state, ownProps) => ({
+    collection: selectCollectionByName(ownProps.match.params.collectionId)(state)
 })
 
 const mapDispatchToProps = dispatch => ({

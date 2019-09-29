@@ -3,10 +3,9 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { auth, createUserProfileDocument, addCollectionAndDocuments } from './firebase/firebase.utils.js';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils.js';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selectors';
-import { selectCollectionsForPreview } from './redux/shop/shop.selectors';
 
 import Header from './components/header/header.component';
 import SignInAndSingUpPage from './pages/sign-in-up/sign-in-up.component.jsx';
@@ -17,8 +16,7 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import './App.css';
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
-  collections: selectCollectionsForPreview
+  currentUser: selectCurrentUser
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -31,7 +29,7 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser, collections } = this.props;
+    const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       // if user sign in, check if user is sign in(userAuth !== null), gets userRef from createUserProfileDocument from userAuth object been passed -
       // if there is a document there(userRef), it will be passed back to userRef var. If there isn't an user document, it will create a document in 
@@ -60,8 +58,6 @@ class App extends Component {
       } else {
         // if userAuth is null, setState - currentUser is userAuth (userAuth === null)
         setCurrentUser(userAuth);
-        // Adds collections to Firebase 
-        addCollectionAndDocuments('collections', collections.map(({ title, items }) => ({ title, items })))
       }
     })
   }
