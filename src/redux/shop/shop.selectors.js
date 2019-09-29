@@ -10,7 +10,7 @@ export const selectShopCollections = createSelector(
 export const selectCollectionByName = collectionUrlParam => createSelector(
     [selectShopCollections],
     collections => collections ? collections[collectionUrlParam] : null
-) 
+)
 
 /**
  *  Selects collections which are stored in Object data type. Gets collections names which are the keys(property names) for collection.
@@ -19,4 +19,15 @@ export const selectCollectionByName = collectionUrlParam => createSelector(
 export const selectCollectionsForPreview = createSelector(
     [selectShopCollections],
     collections => collections ? Object.keys(collections).map(key => collections[key]) : []
+)
+
+export const selectIsFetching = createSelector(
+    [selectShop],
+    shop => shop.isFetching
+)
+
+export const selectIsCollectionsLoaded = createSelector(
+    [selectShop],
+    // !! changes null to false
+    shop => !!shop.collections
 )
